@@ -1,30 +1,41 @@
 package com.jewel.mockito.mockitodemo.business;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
+@ExtendWith(MockitoExtension.class)
 public class someBusinessImpMockTest {
-    DataService dataServicemock = mock(DataService.class);
+    @Mock
+    private DataService dataServiceMock;
+
+    @InjectMocks
+    private someBusinessImp businessImp;
+
     @Test
     void findGreatestOfAlldataBasicSenerio(){
+        when(dataServiceMock.retrieveAllData()).thenReturn(new int[]{23,232,3});
 
-        when(dataServicemock.retrieveAllData()).thenReturn(new int[]{23,232,3});
-
-        someBusinessImp businessImp = new someBusinessImp(dataServicemock);
-        int result = businessImp.findTheGreatestOfAllData();
-        assertEquals(232,result);
+        assertEquals(232,businessImp.findTheGreatestOfAllData());
     }
 
     @Test
     void findGreatestOfAlldataBasicSenerioForOneElement(){
 
-        when(dataServicemock.retrieveAllData()).thenReturn(new int[]{1});
+        when(dataServiceMock.retrieveAllData()).thenReturn(new int[]{1});
 
-        someBusinessImp businessImp = new someBusinessImp(dataServicemock);
-        int result = businessImp.findTheGreatestOfAllData();
-        assertEquals(1,result);
+        assertEquals(1,businessImp.findTheGreatestOfAllData());
+    }
+
+    @Test
+    void findGreatestOfAlldataBasicSenerioForEmpty(){
+
+        when(dataServiceMock.retrieveAllData()).thenReturn(new int[]{});
+
+        assertEquals(Integer.MIN_VALUE,businessImp.findTheGreatestOfAllData());
     }
 }
